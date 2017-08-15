@@ -1,30 +1,11 @@
 import React, { Component } from "react";
 import Header from "../../components/Header";
-import { getBooksFromFakeXHR, addBooksToFakeXHR } from "../../lib/books.db.js";
+import { getBooksFromFakeXHR, addBookToFakeXHR } from "../../lib/books.db.js";
 import "./App.css";
-
-const Title = ({ title }) =>
-  <h1>
-    {title}
-  </h1>;
-
-const Book = ({ title, author }) =>
-  <li>
-    <h3>
-      {title}{" "}
-    </h3>
-    <p>
-      {author}
-    </p>
-  </li>;
-
-// const BookList = ({ books }) => (
-//   <ul>
-//     {books
-//       .map(book => <Book title={book.title} author={book.author} />
-//         )}
-//   </ul>
-//   );
+import BookListAppTitle from "../../components/BookListAppTitle";
+import BookList from "../BookList/index";
+import NewBookForm from "../NewBookForm";
+import BookFilterInput from "../../components/BookFilterInput";
 
 class App extends Component {
   constructor() {
@@ -34,10 +15,26 @@ class App extends Component {
       title: "Book List",
       books: []
     };
+    this.parentAddBook = this.parentAddBook.bind(this);
+    this.setSearchFilter = this.setSearchFilter.bind(this);
   }
-  componentDidMount() {
+
+  setSearchFilter(event) {
+    console.log(event.target.value);
+    const searchFilter = event.target.value;
+    this.setState({ searchFilter });
+  }
+  parentAddBook(newBook) {
+    const books = this.state.books;
+    books.push(newBook);
     this.setState({
-      books: getBooksFromFakeXHR
+      books: books
+    });
+  }
+
+  componentDidMount() {
+    getBooksFromFakeXHR().then(booklist => {
+      this.setState({ books: booklist });
     });
   }
 
@@ -45,8 +42,11 @@ class App extends Component {
     return (
       <div className="App">
         <Header />
-        <Title title={this.state.title} />
+        <BookListAppTitle title={this.state.title} />
         <p className="App-intro" />
+        <BookList books={this.state.books} />
+        <BookFilterInput setSearchFilter={this.state.searchFilter}/>
+        <NewBookForm childAddBook={this.parentAddBook} />
       </div>
     );
   }
