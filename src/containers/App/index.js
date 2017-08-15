@@ -25,7 +25,7 @@ class App extends Component {
     this.setState({ searchFilter });
   }
   parentAddBook(newBook) {
-    addBookToFakeXHR()
+    addBookToFakeXHR(newBook)
     .then(books => {
       this.setState({books:books});
     });
