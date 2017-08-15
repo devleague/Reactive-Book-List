@@ -13,22 +13,21 @@ class App extends Component {
 
     this.state = {
       title: "Book List",
-      books: []
+      books: [],
+      searchFilter: ''
     };
     this.parentAddBook = this.parentAddBook.bind(this);
     this.setSearchFilter = this.setSearchFilter.bind(this);
   }
 
   setSearchFilter(event) {
-    console.log(event.target.value);
     const searchFilter = event.target.value;
     this.setState({ searchFilter });
   }
   parentAddBook(newBook) {
-    const books = this.state.books;
-    books.push(newBook);
-    this.setState({
-      books: books
+    addBookToFakeXHR()
+    .then(books => {
+      this.setState({books:books});
     });
   }
 
@@ -44,8 +43,9 @@ class App extends Component {
         <Header />
         <BookListAppTitle title={this.state.title} />
         <p className="App-intro" />
-        <BookList books={this.state.books} />
-        <BookFilterInput setSearchFilter={this.state.searchFilter}/>
+        <BookFilterInput setSearchFilter={this.setSearchFilter}/>
+        <BookList books={this.state.books}
+        searchFilter={this.state.searchFilter} />
         <NewBookForm childAddBook={this.parentAddBook} />
       </div>
     );
